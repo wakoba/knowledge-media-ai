@@ -9,8 +9,10 @@ class RevisedScriptRepository:
     Athenaの修正版台本を保存するRepository。
 
     保存先:
-    output/YYYY-MM-DD/run_HHMMSS/revised_script.json
-    output/YYYY-MM-DD/run_HHMMSS/revised_script.md
+    output/YYYY-MM-DD/run_HHMMSS/revised_script_v1.json
+    output/YYYY-MM-DD/run_HHMMSS/revised_script_v1.md
+    output/YYYY-MM-DD/run_HHMMSS/revised_script_v2.json
+    output/YYYY-MM-DD/run_HHMMSS/revised_script_v2.md
     """
 
     def __init__(
@@ -26,6 +28,7 @@ class RevisedScriptRepository:
     def save(
         self,
         script: AthenaScriptResult,
+        revision_number: int = 1,
         script_date: date | None = None,
     ) -> dict[str, Path]:
         output_dir = self._resolve_output_dir(script_date)
@@ -33,8 +36,13 @@ class RevisedScriptRepository:
 
         target_date = script_date or date.today()
 
-        json_path = self._save_json(script, output_dir)
-        md_path = self._save_markdown(script, output_dir, target_date)
+        json_path = self._save_json(script, output_dir, revision_number)
+        md_path = self._save_markdown(
+            script,
+            output_dir,
+            target_date,
+            revision_number,
+        )
 
         return {
             "json": json_path,
@@ -49,15 +57,15 @@ class RevisedScriptRepository:
             return self.run_dir
 
         target_date = script_date or date.today()
-
         return self.base_dir / target_date.isoformat()
 
     def _save_json(
         self,
         script: AthenaScriptResult,
         output_dir: Path,
+        revision_number: int,
     ) -> Path:
-        json_path = output_dir / "revised_script.json"
+        json_path = output_dir / f"revised_script_v{revision_number}.json"
 
         json_path.write_text(
             script.model_dump_json(indent=2),
@@ -71,11 +79,12 @@ class RevisedScriptRepository:
         script: AthenaScriptResult,
         output_dir: Path,
         script_date: date,
+        revision_number: int,
     ) -> Path:
-        md_path = output_dir / "revised_script.md"
+        md_path = output_dir / f"revised_script_v{revision_number}.md"
 
         lines = [
-            "# Athena Revised Script",
+            f"# Athena Revised Script v{revision_number}",
             "",
             f"Date: {script_date.isoformat()}",
             "",

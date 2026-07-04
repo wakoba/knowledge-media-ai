@@ -9,8 +9,10 @@ class RevisedReviewRepository:
     Sophiaの再レビュー結果を保存するRepository。
 
     保存先:
-    output/YYYY-MM-DD/run_HHMMSS/revised_review.json
-    output/YYYY-MM-DD/run_HHMMSS/revised_review.md
+    output/YYYY-MM-DD/run_HHMMSS/revised_review_v1.json
+    output/YYYY-MM-DD/run_HHMMSS/revised_review_v1.md
+    output/YYYY-MM-DD/run_HHMMSS/revised_review_v2.json
+    output/YYYY-MM-DD/run_HHMMSS/revised_review_v2.md
     """
 
     def __init__(
@@ -26,6 +28,7 @@ class RevisedReviewRepository:
     def save(
         self,
         review: SophiaReviewResult,
+        revision_number: int = 1,
         review_date: date | None = None,
     ) -> dict[str, Path]:
         output_dir = self._resolve_output_dir(review_date)
@@ -33,8 +36,13 @@ class RevisedReviewRepository:
 
         target_date = review_date or date.today()
 
-        json_path = self._save_json(review, output_dir)
-        md_path = self._save_markdown(review, output_dir, target_date)
+        json_path = self._save_json(review, output_dir, revision_number)
+        md_path = self._save_markdown(
+            review,
+            output_dir,
+            target_date,
+            revision_number,
+        )
 
         return {
             "json": json_path,
@@ -49,15 +57,15 @@ class RevisedReviewRepository:
             return self.run_dir
 
         target_date = review_date or date.today()
-
         return self.base_dir / target_date.isoformat()
 
     def _save_json(
         self,
         review: SophiaReviewResult,
         output_dir: Path,
+        revision_number: int,
     ) -> Path:
-        json_path = output_dir / "revised_review.json"
+        json_path = output_dir / f"revised_review_v{revision_number}.json"
 
         json_path.write_text(
             review.model_dump_json(indent=2),
@@ -71,11 +79,12 @@ class RevisedReviewRepository:
         review: SophiaReviewResult,
         output_dir: Path,
         review_date: date,
+        revision_number: int,
     ) -> Path:
-        md_path = output_dir / "revised_review.md"
+        md_path = output_dir / f"revised_review_v{revision_number}.md"
 
         lines = [
-            "# Sophia Revised Review",
+            f"# Sophia Revised Review v{revision_number}",
             "",
             f"Date: {review_date.isoformat()}",
             "",

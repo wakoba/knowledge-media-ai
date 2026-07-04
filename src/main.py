@@ -206,25 +206,47 @@ def main():
         print(f"- JSON: {review_paths['json']}")
         print(f"- Markdown: {review_paths['markdown']}")
 
-        # Athena Revision + Sophia Re-review
-        revised_script_paths = None
-        revised_review_paths = None
-
+        # Athena Revision Loop + Sophia Re-review
         final_script_result = script_result
         final_review_result = review_result
 
-        if not review_result.approved:
+        revision_output_paths = {}
+
+        max_revision_rounds = 2
+        current_script_result = script_result
+        current_review_result = review_result
+
+        revised_script_repository = RevisedScriptRepository(
+            run_dir=run_context.run_dir,
+        )
+        revised_review_repository = RevisedReviewRepository(
+            run_dir=run_context.run_dir,
+        )
+
+        for revision_round in range(1, max_revision_rounds + 1):
+            if current_review_result.approved:
+                if revision_round == 1:
+                    logger.info(
+                        "Athena revision skipped because Sophia approved the script"
+                    )
+                else:
+                    logger.info(
+                        "Athena revision loop stopped because Sophia approved the revised script"
+                    )
+                break
+
             print()
             print("=" * 60)
-            print("🦉 Athena Revision")
+            print(f"🦉 Athena Revision v{revision_round}")
             print("=" * 60)
 
             revised_script_result = athena.revise_script(
                 research=research_result,
-                original_script=script_result,
-                review=review_result,
+                original_script=current_script_result,
+                review=current_review_result,
             )
 
+            current_script_result = revised_script_result
             final_script_result = revised_script_result
 
             print("Revised Title:")
@@ -239,14 +261,16 @@ def main():
             for section in revised_script_result.sections:
                 print(f"- {section.heading}")
 
-            revised_script_repository = RevisedScriptRepository(
-                run_dir=run_context.run_dir,
-            )
             revised_script_paths = revised_script_repository.save(
                 revised_script_result,
+                revision_number=revision_round,
             )
 
-            logger.info("Athena revision completed")
+            revision_output_paths[
+                f"revised_script_v{revision_round}"
+            ] = revised_script_paths
+
+            logger.info("Athena revision v%s completed", revision_round)
             logger.info("Revised Script title: %s", revised_script_result.title)
             logger.info(
                 "Saved Revised Script JSON: %s",
@@ -262,10 +286,9 @@ def main():
             print(f"- JSON: {revised_script_paths['json']}")
             print(f"- Markdown: {revised_script_paths['markdown']}")
 
-            # Sophia: 修正版台本の再レビュー
             print()
             print("=" * 60)
-            print("🛡️ Sophia Re-review")
+            print(f"🛡️ Sophia Re-review v{revision_round}")
             print("=" * 60)
 
             revised_review_result = sophia.review(
@@ -273,6 +296,7 @@ def main():
                 script=revised_script_result,
             )
 
+            current_review_result = revised_review_result
             final_review_result = revised_review_result
 
             print("Approved:")
@@ -299,14 +323,16 @@ def main():
                 print("Issues:")
                 print("- No major issues found.")
 
-            revised_review_repository = RevisedReviewRepository(
-                run_dir=run_context.run_dir,
-            )
             revised_review_paths = revised_review_repository.save(
                 revised_review_result,
+                revision_number=revision_round,
             )
 
-            logger.info("Sophia re-review completed")
+            revision_output_paths[
+                f"revised_review_v{revision_round}"
+            ] = revised_review_paths
+
+            logger.info("Sophia re-review v%s completed", revision_round)
             logger.info(
                 "Sophia re-review approved: %s",
                 revised_review_result.approved,
@@ -329,9 +355,6 @@ def main():
             print(f"- JSON: {revised_review_paths['json']}")
             print(f"- Markdown: {revised_review_paths['markdown']}")
 
-        else:
-            logger.info("Athena revision skipped because Sophia approved the script")
-
         # Run Summary: 1回の実行結果をまとめる
         run_summary_repository = RunSummaryRepository(
             run_dir=run_context.run_dir,
@@ -344,11 +367,7 @@ def main():
             "review": review_paths,
         }
 
-        if revised_script_paths is not None:
-            output_paths["revised_script"] = revised_script_paths
-
-        if revised_review_paths is not None:
-            output_paths["revised_review"] = revised_review_paths
+        output_paths.update(revision_output_paths)
 
         run_summary_path = run_summary_repository.save(
             run_context=run_context,
