@@ -125,7 +125,15 @@ Do not include explanations before or after the JSON.
 
 Return exactly 5 topics.
 
-The response must be valid JSON that can be parsed directly by Python's json.loads().
+Important JSON rules:
+
+- Use standard JSON double quotes only.
+- Do not use Japanese brackets 「」 as JSON string delimiters.
+- Do not leave any string unclosed.
+- Do not end any JSON string value with an unmatched Japanese closing bracket 」.
+- Do not include raw line breaks inside string values.
+- Escape double quotes inside values if necessary.
+- The final output must be parseable by Python's json.loads().
 
 All output values must be written in Japanese.
 

@@ -3,6 +3,7 @@ from pathlib import Path
 from models.athena import AthenaScriptResult
 from models.orion import OrionResearchResult
 from models.polaris import PolarisResult
+from models.sophia import SophiaReviewResult
 from storage.run_context import RunContext
 
 
@@ -24,6 +25,7 @@ class RunSummaryRepository:
         meeting: PolarisResult,
         research: OrionResearchResult,
         script: AthenaScriptResult,
+        review: SophiaReviewResult | None = None,
         output_paths: dict[str, dict[str, Path]] | None = None,
     ) -> Path:
         """
@@ -44,19 +46,31 @@ class RunSummaryRepository:
             "",
             "---",
             "",
-            "## Editor's Choice",
-            "",
-            f"### {selected_topic.title}",
-            "",
-            "### Reason",
-            "",
-            choice.reason,
-            "",
-            "---",
-            "",
-            "## Topic Candidates",
+            "## Quality Gate",
             "",
         ]
+
+        lines.extend(self._build_quality_gate_lines(review))
+
+        lines.extend(
+            [
+                "",
+                "---",
+                "",
+                "## Editor's Choice",
+                "",
+                f"### {selected_topic.title}",
+                "",
+                "### Reason",
+                "",
+                choice.reason,
+                "",
+                "---",
+                "",
+                "## Topic Candidates",
+                "",
+            ]
+        )
 
         for i, topic in enumerate(meeting.topics, start=1):
             lines.extend(
@@ -100,7 +114,7 @@ class RunSummaryRepository:
                 "",
                 "## Athena Script",
                 "",
-                f"### Title",
+                "### Title",
                 "",
                 script.title,
                 "",
@@ -127,6 +141,56 @@ class RunSummaryRepository:
                 "",
                 script.closing,
                 "",
+            ]
+        )
+
+        if review is not None:
+            lines.extend(
+                [
+                    "---",
+                    "",
+                    "## Sophia Review",
+                    "",
+                    f"- Approved: {review.approved}",
+                    f"- Risk Level: {review.risk_level}",
+                    f"- Issue Count: {len(review.issues)}",
+                    "",
+                    "### Overall Assessment",
+                    "",
+                    review.overall_assessment,
+                    "",
+                ]
+            )
+
+            if review.issues:
+                lines.extend(
+                    [
+                        "### Issues",
+                        "",
+                    ]
+                )
+
+                for i, issue in enumerate(review.issues, start=1):
+                    lines.extend(
+                        [
+                            f"#### {i}. {issue.type}",
+                            "",
+                            f"- Severity: {issue.severity}",
+                            f"- Original Text: {issue.original_text}",
+                            "",
+                            "Problem:",
+                            "",
+                            issue.problem,
+                            "",
+                            "Suggested Revision:",
+                            "",
+                            issue.suggested_revision,
+                            "",
+                        ]
+                    )
+
+        lines.extend(
+            [
                 "---",
                 "",
                 "## Output Files",
@@ -155,3 +219,50 @@ class RunSummaryRepository:
         )
 
         return summary_path
+
+    def _build_quality_gate_lines(
+        self,
+        review: SophiaReviewResult | None,
+    ) -> list[str]:
+        """
+        Sophiaレビュー結果からQuality Gate表示を作る。
+        """
+
+        if review is None:
+            return [
+                "Status: Not Reviewed",
+                "",
+                "Sophia review has not been completed for this run.",
+            ]
+
+        if review.approved:
+            status = "Approved for Publish"
+        else:
+            status = "Needs Revision"
+
+        lines = [
+            f"Status: {status}",
+            f"Risk Level: {review.risk_level}",
+            f"Sophia Approved: {review.approved}",
+            f"Issue Count: {len(review.issues)}",
+        ]
+
+        if not review.approved:
+            lines.extend(
+                [
+                    "",
+                    "### Required Revisions",
+                    "",
+                ]
+            )
+
+            if review.required_revisions:
+                for revision in review.required_revisions:
+                    lines.append(f"- {revision}")
+            elif review.issues:
+                for issue in review.issues:
+                    lines.append(f"- {issue.suggested_revision}")
+            else:
+                lines.append("- Review was not approved, but no specific revision was provided.")
+
+        return lines

@@ -214,6 +214,7 @@ def main():
             meeting=result,
             research=research_result,
             script=script_result,
+            review=review_result,
             output_paths={
                 "meeting": saved_paths,
                 "research": research_paths,
