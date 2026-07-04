@@ -6,6 +6,8 @@ from storage.history_reader import HistoryReader
 from storage.meeting_repository import MeetingRepository
 from storage.research_repository import ResearchRepository
 from storage.review_repository import ReviewRepository
+from storage.revised_review_repository import RevisedReviewRepository
+from storage.revised_script_repository import RevisedScriptRepository
 from storage.run_context import RunContext
 from storage.run_summary_repository import RunSummaryRepository
 from storage.script_repository import ScriptRepository
@@ -204,23 +206,157 @@ def main():
         print(f"- JSON: {review_paths['json']}")
         print(f"- Markdown: {review_paths['markdown']}")
 
+        # Athena Revision + Sophia Re-review
+        revised_script_paths = None
+        revised_review_paths = None
+
+        final_script_result = script_result
+        final_review_result = review_result
+
+        if not review_result.approved:
+            print()
+            print("=" * 60)
+            print("🦉 Athena Revision")
+            print("=" * 60)
+
+            revised_script_result = athena.revise_script(
+                research=research_result,
+                original_script=script_result,
+                review=review_result,
+            )
+
+            final_script_result = revised_script_result
+
+            print("Revised Title:")
+            print(revised_script_result.title)
+            print()
+
+            print("Revised Hook:")
+            print(revised_script_result.hook)
+            print()
+
+            print("Revised Sections:")
+            for section in revised_script_result.sections:
+                print(f"- {section.heading}")
+
+            revised_script_repository = RevisedScriptRepository(
+                run_dir=run_context.run_dir,
+            )
+            revised_script_paths = revised_script_repository.save(
+                revised_script_result,
+            )
+
+            logger.info("Athena revision completed")
+            logger.info("Revised Script title: %s", revised_script_result.title)
+            logger.info(
+                "Saved Revised Script JSON: %s",
+                revised_script_paths["json"],
+            )
+            logger.info(
+                "Saved Revised Script Markdown: %s",
+                revised_script_paths["markdown"],
+            )
+
+            print()
+            print("Revised script saved:")
+            print(f"- JSON: {revised_script_paths['json']}")
+            print(f"- Markdown: {revised_script_paths['markdown']}")
+
+            # Sophia: 修正版台本の再レビュー
+            print()
+            print("=" * 60)
+            print("🛡️ Sophia Re-review")
+            print("=" * 60)
+
+            revised_review_result = sophia.review(
+                research=research_result,
+                script=revised_script_result,
+            )
+
+            final_review_result = revised_review_result
+
+            print("Approved:")
+            print(revised_review_result.approved)
+            print()
+
+            print("Risk Level:")
+            print(revised_review_result.risk_level)
+            print()
+
+            print("Overall Assessment:")
+            print(revised_review_result.overall_assessment)
+            print()
+
+            if revised_review_result.issues:
+                print("Issues:")
+                for issue in revised_review_result.issues:
+                    print(f"- [{issue.severity}] {issue.type}")
+                    print(f"  Original: {issue.original_text}")
+                    print(f"  Problem: {issue.problem}")
+                    print(f"  Suggested: {issue.suggested_revision}")
+                    print()
+            else:
+                print("Issues:")
+                print("- No major issues found.")
+
+            revised_review_repository = RevisedReviewRepository(
+                run_dir=run_context.run_dir,
+            )
+            revised_review_paths = revised_review_repository.save(
+                revised_review_result,
+            )
+
+            logger.info("Sophia re-review completed")
+            logger.info(
+                "Sophia re-review approved: %s",
+                revised_review_result.approved,
+            )
+            logger.info(
+                "Sophia re-review risk level: %s",
+                revised_review_result.risk_level,
+            )
+            logger.info(
+                "Saved Revised Review JSON: %s",
+                revised_review_paths["json"],
+            )
+            logger.info(
+                "Saved Revised Review Markdown: %s",
+                revised_review_paths["markdown"],
+            )
+
+            print()
+            print("Revised review saved:")
+            print(f"- JSON: {revised_review_paths['json']}")
+            print(f"- Markdown: {revised_review_paths['markdown']}")
+
+        else:
+            logger.info("Athena revision skipped because Sophia approved the script")
+
         # Run Summary: 1回の実行結果をまとめる
         run_summary_repository = RunSummaryRepository(
             run_dir=run_context.run_dir,
         )
 
+        output_paths = {
+            "meeting": saved_paths,
+            "research": research_paths,
+            "script": script_paths,
+            "review": review_paths,
+        }
+
+        if revised_script_paths is not None:
+            output_paths["revised_script"] = revised_script_paths
+
+        if revised_review_paths is not None:
+            output_paths["revised_review"] = revised_review_paths
+
         run_summary_path = run_summary_repository.save(
             run_context=run_context,
             meeting=result,
             research=research_result,
-            script=script_result,
-            review=review_result,
-            output_paths={
-                "meeting": saved_paths,
-                "research": research_paths,
-                "script": script_paths,
-                "review": review_paths,
-            },
+            script=final_script_result,
+            review=final_review_result,
+            output_paths=output_paths,
         )
 
         logger.info("Saved Run Summary: %s", run_summary_path)

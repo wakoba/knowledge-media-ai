@@ -235,8 +235,14 @@ class RunSummaryRepository:
                 "Sophia review has not been completed for this run.",
             ]
 
-        if review.approved:
+        issue_count = len(review.issues)
+
+        if review.approved and issue_count == 0:
             status = "Approved for Publish"
+
+        elif review.approved and issue_count > 0:
+            status = "Approved with Minor Notes"
+
         else:
             status = "Needs Revision"
 
@@ -244,8 +250,22 @@ class RunSummaryRepository:
             f"Status: {status}",
             f"Risk Level: {review.risk_level}",
             f"Sophia Approved: {review.approved}",
-            f"Issue Count: {len(review.issues)}",
+            f"Issue Count: {issue_count}",
         ]
+
+        if review.approved and issue_count > 0:
+            lines.extend(
+                [
+                    "",
+                    "### Minor Notes",
+                    "",
+                ]
+            )
+
+            for issue in review.issues:
+                lines.append(
+                    f"- [{issue.severity}] {issue.suggested_revision}"
+                )
 
         if not review.approved:
             lines.extend(
@@ -263,6 +283,8 @@ class RunSummaryRepository:
                 for issue in review.issues:
                     lines.append(f"- {issue.suggested_revision}")
             else:
-                lines.append("- Review was not approved, but no specific revision was provided.")
+                lines.append(
+                    "- Review was not approved, but no specific revision was provided."
+                )
 
         return lines
