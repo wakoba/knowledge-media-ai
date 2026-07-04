@@ -1,42 +1,62 @@
 from agents.polaris import Polaris
-from storage.meeting_repository import MeetingRepository
 from storage.history_reader import HistoryReader
+from storage.meeting_repository import MeetingRepository
+from utils.logger import setup_logger
 
 
 def main():
-    repository = MeetingRepository()
+    logger = setup_logger()
 
-    history_reader = HistoryReader(repository)
-    history_summary = history_reader.build_summary(limit=5)
+    try:
+        logger.info("Project Polaris started")
 
-    polaris = Polaris()
-    result = polaris.generate_topics(history_summary=history_summary)
+        repository = MeetingRepository()
 
-    saved_paths = repository.save(result)
+        history_reader = HistoryReader(repository)
+        history_summary = history_reader.build_summary(limit=5)
 
-    print()
-    print("Saved:")
-    print(f"- JSON: {saved_paths['json']}")
-    print(f"- Markdown: {saved_paths['markdown']}")
+        logger.info("History summary generated")
 
-    print("=" * 60)
-    print("🌍 Project Polaris")
-    print("Today's Editorial Meeting")
-    print("=" * 60)
+        polaris = Polaris()
+        result = polaris.generate_topics(history_summary=history_summary)
 
-    for i, topic in enumerate(result.topics):
-        print(f"{i + 1}. {topic.title}")
-        print(f"   Score: {topic.curiosity_score}")
+        logger.info("Generated %s topics", len(result.topics))
+
+        choice = result.editors_choice
+        selected_topic = result.topics[choice.index]
+
+        logger.info("Editor's Choice: %s", selected_topic.title)
+
+        saved_paths = repository.save(result)
+
+        logger.info("Saved JSON: %s", saved_paths["json"])
+        logger.info("Saved Markdown: %s", saved_paths["markdown"])
+        logger.info("Project Polaris completed successfully")
+
         print()
+        print("Saved:")
+        print(f"- JSON: {saved_paths['json']}")
+        print(f"- Markdown: {saved_paths['markdown']}")
 
-    choice = result.editors_choice
-    selected_topic = result.topics[choice.index]
+        print("=" * 60)
+        print("🌍 Project Polaris")
+        print("Today's Editorial Meeting")
+        print("=" * 60)
 
-    print("🏆 Editor's Choice")
-    print(selected_topic.title)
-    print()
-    print("Reason:")
-    print(choice.reason)
+        for i, topic in enumerate(result.topics):
+            print(f"{i + 1}. {topic.title}")
+            print(f"   Score: {topic.curiosity_score}")
+            print()
+
+        print("🏆 Editor's Choice")
+        print(selected_topic.title)
+        print()
+        print("Reason:")
+        print(choice.reason)
+
+    except Exception as e:
+        logger.exception("Project Polaris failed: %s", e)
+        raise
 
 
 if __name__ == "__main__":
