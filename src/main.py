@@ -5,6 +5,7 @@ from storage.history_reader import HistoryReader
 from storage.meeting_repository import MeetingRepository
 from storage.research_repository import ResearchRepository
 from storage.run_context import RunContext
+from storage.run_summary_repository import RunSummaryRepository
 from storage.script_repository import ScriptRepository
 from utils.logger import setup_logger
 
@@ -15,20 +16,24 @@ def main():
     try:
         logger.info("Project Polaris started")
 
+        # 1回の実行単位を作成
         run_context = RunContext()
 
         logger.info("Run ID: %s", run_context.run_id)
         logger.info("Run directory: %s", run_context.run_dir)
 
+        # 編集会議の保存・履歴読み込み用Repository
         meeting_repository = MeetingRepository(
             run_dir=run_context.run_dir,
         )
 
+        # 過去の編集会議履歴を読み込む
         history_reader = HistoryReader(meeting_repository)
         history_summary = history_reader.build_summary(limit=5)
 
         logger.info("History summary generated")
 
+        # Polaris: テーマ選定
         polaris = Polaris()
         result = polaris.generate_topics(
             history_summary=history_summary,
@@ -41,6 +46,7 @@ def main():
 
         logger.info("Editor's Choice: %s", selected_topic.title)
 
+        # 編集会議結果を保存
         saved_paths = meeting_repository.save(result)
 
         logger.info("Saved JSON: %s", saved_paths["json"])
@@ -72,6 +78,7 @@ def main():
         print("Reason:")
         print(choice.reason)
 
+        # Orion: リサーチ
         print()
         print("=" * 60)
         print("🔭 Orion Research")
@@ -105,6 +112,7 @@ def main():
         print(f"- JSON: {research_paths['json']}")
         print(f"- Markdown: {research_paths['markdown']}")
 
+        # Athena: 台本作成
         print()
         print("=" * 60)
         print("🦉 Athena Script")
@@ -139,6 +147,29 @@ def main():
         print("Script saved:")
         print(f"- JSON: {script_paths['json']}")
         print(f"- Markdown: {script_paths['markdown']}")
+
+        # Run Summary: 1回の実行結果をまとめる
+        run_summary_repository = RunSummaryRepository(
+            run_dir=run_context.run_dir,
+        )
+
+        run_summary_path = run_summary_repository.save(
+            run_context=run_context,
+            meeting=result,
+            research=research_result,
+            script=script_result,
+            output_paths={
+                "meeting": saved_paths,
+                "research": research_paths,
+                "script": script_paths,
+            },
+        )
+
+        logger.info("Saved Run Summary: %s", run_summary_path)
+
+        print()
+        print("Run summary saved:")
+        print(f"- Markdown: {run_summary_path}")
 
         logger.info("Project Polaris completed successfully")
 
