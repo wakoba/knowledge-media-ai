@@ -1,4 +1,5 @@
 from agents.athena import Athena
+from agents.atlas import Atlas
 from agents.orion import Orion
 from agents.polaris import Polaris
 from agents.sophia import Sophia
@@ -12,6 +13,7 @@ from storage.revised_script_repository import RevisedScriptRepository
 from storage.run_context import RunContext
 from storage.run_summary_repository import RunSummaryRepository
 from storage.script_repository import ScriptRepository
+from storage.video_plan_repository import VideoPlanRepository
 from utils.logger import setup_logger
 
 
@@ -27,7 +29,8 @@ class EditorialPipeline:
     5. 必要ならAthenaが最大2回まで修正
     6. Sophiaが修正版を再レビュー
     7. 最終台本をfinal_scriptとして保存
-    8. すべての成果物をrun単位で保存
+    8. Sophia承認済みならAtlasが動画設計を作成
+    9. すべての成果物をrun単位で保存
     """
 
     def __init__(
@@ -116,6 +119,27 @@ class EditorialPipeline:
                 final_review_result=final_review_result,
             )
 
+            video_plan_paths = None
+
+            if final_review_result.approved:
+                video_plan_result, video_plan_paths = self._run_atlas(
+                    run_context=run_context,
+                    final_script_result=final_script_result,
+                )
+
+                self.logger.info(
+                    "Atlas video plan generated: %s",
+                    video_plan_result.title,
+                )
+            else:
+                self.logger.info(
+                    "Atlas skipped because the final script was not approved"
+                )
+
+                print()
+                print("Atlas skipped:")
+                print("- Final script is not approved by Sophia.")
+
             run_summary_path = self._save_run_summary(
                 run_context=run_context,
                 meeting_result=meeting_result,
@@ -127,6 +151,7 @@ class EditorialPipeline:
                 script_paths=script_paths,
                 review_paths=review_paths,
                 final_script_paths=final_script_paths,
+                video_plan_paths=video_plan_paths,
                 revision_output_paths=revision_output_paths,
             )
 
@@ -492,6 +517,53 @@ class EditorialPipeline:
 
         return final_script_paths
 
+    def _run_atlas(
+        self,
+        run_context,
+        final_script_result,
+    ):
+        print()
+        print("=" * 60)
+        print("🎬 Atlas Video Plan")
+        print("=" * 60)
+
+        atlas = Atlas()
+        video_plan_result = atlas.create_video_plan(
+            final_script=final_script_result,
+        )
+
+        print("Title:")
+        print(video_plan_result.title)
+        print()
+
+        print("Visual Style:")
+        print(video_plan_result.visual_style)
+        print()
+
+        print("Scene Plan:")
+        for scene in video_plan_result.scene_plan:
+            print(f"- Scene {scene.scene_number}: {scene.section_heading}")
+
+        video_plan_repository = VideoPlanRepository(
+            run_dir=run_context.run_dir,
+        )
+
+        video_plan_paths = video_plan_repository.save(video_plan_result)
+
+        self.logger.info("Atlas video plan completed")
+        self.logger.info("Saved Video Plan JSON: %s", video_plan_paths["json"])
+        self.logger.info(
+            "Saved Video Plan Markdown: %s",
+            video_plan_paths["markdown"],
+        )
+
+        print()
+        print("Video plan saved:")
+        print(f"- JSON: {video_plan_paths['json']}")
+        print(f"- Markdown: {video_plan_paths['markdown']}")
+
+        return video_plan_result, video_plan_paths
+
     def _save_run_summary(
         self,
         run_context,
@@ -504,6 +576,7 @@ class EditorialPipeline:
         script_paths,
         review_paths,
         final_script_paths,
+        video_plan_paths,
         revision_output_paths,
     ):
         run_summary_repository = RunSummaryRepository(
@@ -517,6 +590,9 @@ class EditorialPipeline:
             "review": review_paths,
             "final_script": final_script_paths,
         }
+
+        if video_plan_paths is not None:
+            output_paths["video_plan"] = video_plan_paths
 
         output_paths.update(revision_output_paths)
 
