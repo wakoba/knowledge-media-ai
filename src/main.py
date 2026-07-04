@@ -1,9 +1,11 @@
 from agents.athena import Athena
 from agents.orion import Orion
 from agents.polaris import Polaris
+from agents.sophia import Sophia
 from storage.history_reader import HistoryReader
 from storage.meeting_repository import MeetingRepository
 from storage.research_repository import ResearchRepository
+from storage.review_repository import ReviewRepository
 from storage.run_context import RunContext
 from storage.run_summary_repository import RunSummaryRepository
 from storage.script_repository import ScriptRepository
@@ -148,6 +150,60 @@ def main():
         print(f"- JSON: {script_paths['json']}")
         print(f"- Markdown: {script_paths['markdown']}")
 
+        # Sophia: ファクトチェック・公開前レビュー
+        print()
+        print("=" * 60)
+        print("🛡️ Sophia Review")
+        print("=" * 60)
+
+        sophia = Sophia()
+        review_result = sophia.review(
+            research=research_result,
+            script=script_result,
+        )
+
+        print("Approved:")
+        print(review_result.approved)
+        print()
+
+        print("Risk Level:")
+        print(review_result.risk_level)
+        print()
+
+        print("Overall Assessment:")
+        print(review_result.overall_assessment)
+        print()
+
+        if review_result.issues:
+            print("Issues:")
+            for issue in review_result.issues:
+                print(f"- [{issue.severity}] {issue.type}")
+                print(f"  Original: {issue.original_text}")
+                print(f"  Problem: {issue.problem}")
+                print(f"  Suggested: {issue.suggested_revision}")
+                print()
+        else:
+            print("Issues:")
+            print("- No major issues found.")
+
+        logger.info("Sophia review completed")
+        logger.info("Sophia approved: %s", review_result.approved)
+        logger.info("Sophia risk level: %s", review_result.risk_level)
+
+        # Sophiaレビュー結果を保存
+        review_repository = ReviewRepository(
+            run_dir=run_context.run_dir,
+        )
+        review_paths = review_repository.save(review_result)
+
+        logger.info("Saved Review JSON: %s", review_paths["json"])
+        logger.info("Saved Review Markdown: %s", review_paths["markdown"])
+
+        print()
+        print("Review saved:")
+        print(f"- JSON: {review_paths['json']}")
+        print(f"- Markdown: {review_paths['markdown']}")
+
         # Run Summary: 1回の実行結果をまとめる
         run_summary_repository = RunSummaryRepository(
             run_dir=run_context.run_dir,
@@ -162,6 +218,7 @@ def main():
                 "meeting": saved_paths,
                 "research": research_paths,
                 "script": script_paths,
+                "review": review_paths,
             },
         )
 
