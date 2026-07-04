@@ -2,6 +2,7 @@ from agents.athena import Athena
 from agents.orion import Orion
 from agents.polaris import Polaris
 from agents.sophia import Sophia
+from storage.final_script_repository import FinalScriptRepository
 from storage.history_reader import HistoryReader
 from storage.meeting_repository import MeetingRepository
 from storage.research_repository import ResearchRepository
@@ -25,7 +26,8 @@ class EditorialPipeline:
     4. Sophiaがレビュー
     5. 必要ならAthenaが最大2回まで修正
     6. Sophiaが修正版を再レビュー
-    7. すべての成果物をrun単位で保存
+    7. 最終台本をfinal_scriptとして保存
+    8. すべての成果物をrun単位で保存
     """
 
     def __init__(
@@ -108,6 +110,12 @@ class EditorialPipeline:
                 initial_review_result=review_result,
             )
 
+            final_script_paths = self._save_final_script(
+                run_context=run_context,
+                final_script_result=final_script_result,
+                final_review_result=final_review_result,
+            )
+
             run_summary_path = self._save_run_summary(
                 run_context=run_context,
                 meeting_result=meeting_result,
@@ -118,6 +126,7 @@ class EditorialPipeline:
                 research_paths=research_paths,
                 script_paths=script_paths,
                 review_paths=review_paths,
+                final_script_paths=final_script_paths,
                 revision_output_paths=revision_output_paths,
             )
 
@@ -455,6 +464,34 @@ class EditorialPipeline:
             print("Issues:")
             print("- No major issues found.")
 
+    def _save_final_script(
+        self,
+        run_context,
+        final_script_result,
+        final_review_result,
+    ):
+        final_script_repository = FinalScriptRepository(
+            run_dir=run_context.run_dir,
+        )
+
+        final_script_paths = final_script_repository.save(
+            script=final_script_result,
+            review=final_review_result,
+        )
+
+        self.logger.info("Saved Final Script JSON: %s", final_script_paths["json"])
+        self.logger.info(
+            "Saved Final Script Markdown: %s",
+            final_script_paths["markdown"],
+        )
+
+        print()
+        print("Final script saved:")
+        print(f"- JSON: {final_script_paths['json']}")
+        print(f"- Markdown: {final_script_paths['markdown']}")
+
+        return final_script_paths
+
     def _save_run_summary(
         self,
         run_context,
@@ -466,6 +503,7 @@ class EditorialPipeline:
         research_paths,
         script_paths,
         review_paths,
+        final_script_paths,
         revision_output_paths,
     ):
         run_summary_repository = RunSummaryRepository(
@@ -477,6 +515,7 @@ class EditorialPipeline:
             "research": research_paths,
             "script": script_paths,
             "review": review_paths,
+            "final_script": final_script_paths,
         }
 
         output_paths.update(revision_output_paths)
