@@ -3,121 +3,165 @@ An AI-powered editorial team that inspires curiosity and lifelong learning.
 
 # 🌍 Project Polaris
 
-> Every day, discover something worth sharing.
+> **知識は、分断ではなく、好奇心を生み出すものである。**
 
-An open-source AI editorial team dedicated to helping people discover how fascinating the world really is.
-
----
-
-## Why
-
-Every day, thousands of stories are published.
-
-Many compete for attention through outrage, fear, or division.
-
-We believe there is another way.
-
-We believe knowledge can inspire curiosity.
-
-We believe learning can create hope.
-
-We believe one meaningful discovery can change someone's day.
-
-Project Polaris exists to build an AI-powered editorial team that helps people explore the world with curiosity, accuracy, and optimism.
+AIの力で、人々の知的好奇心を育て、学びや挑戦のきっかけとなるコンテンツを届けるオープンプロジェクトです。
 
 ---
 
-## Mission
+# このプロジェクトについて
 
-To make the world's knowledge accessible, inspiring, and worth sharing.
+インターネットには、毎日膨大な情報が生まれています。
 
-We don't simply deliver information.
+その一方で、注目を集めるために恐怖や怒りを煽る情報、真偽の分からない情報、誰かを傷つけるコンテンツも少なくありません。
 
-We create moments that make people say,
+私たちは、その流れとは異なるメディアを目指します。
 
-> "I never knew that."
+Project Polaris が届けたいのは、「情報」ではなく「好奇心」です。
 
-> "The world is more fascinating than I thought."
+動画を見終わったあとに、
 
----
+* 「世界って面白い。」
+* 「こんなことがあるんだ。」
+* 「誰かに話したい。」
+* 「もっと調べてみたい。」
+* 「自分も挑戦してみよう。」
 
-## Vision
-
-A world where curiosity spreads from person to person.
-
-Where learning becomes a daily habit.
-
-Where AI helps people think more deeply instead of reacting more quickly.
+そんな気持ちが自然と生まれるようなコンテンツを、AIと人が協力して作り上げます。
 
 ---
 
-## Our Principles
+# Mission
 
-We always strive to:
+世界中の知識を、誰もが楽しめる形で届ける。
 
-- Inspire curiosity
-- Respect people
-- Verify information
-- Encourage lifelong learning
-- Create hope through knowledge
+私たちは単に情報を届けるのではありません。
 
-We never:
+人々の知的好奇心を育て、
 
-- Spread misinformation
-- Attack individuals
-- Promote conspiracy theories
-- Use fear to gain attention
-- Create content that divides people
+学び、
+
+挑戦、
+
+そして共有したくなる発見を届けます。
 
 ---
 
-## Meet the Editorial Team
+# Vision
 
-Project Polaris is not a single AI.
+世界中の人が、
 
-It is an editorial team.
+「世界って面白い。」
 
-| AI | Role |
-|----|------|
-| Polaris | Editor-in-Chief |
-| Orion | Researcher |
-| Athena | Writer |
-| Sophia | Fact Checker |
-| Atlas | Video Producer |
+と毎日思える社会をつくること。
 
-Each AI has one responsibility.
+年齢や国籍、職業に関係なく、
 
-Together, they create trustworthy and inspiring educational content.
+誰もが学び続け、
 
----
+新しいことへ挑戦できる世界を目指します。
 
-## Roadmap
+AIは、人を置き換える存在ではなく、
 
-- ✅ Editorial philosophy
-- 🚧 Polaris (Editor-in-Chief)
-- ⏳ Orion (Research)
-- ⏳ Athena (Writing)
-- ⏳ Sophia (Fact Checking)
-- ⏳ Atlas (Video Production)
-- ⏳ YouTube Publishing
-- ⏳ Multi-platform Publishing
+人の可能性を広げるパートナーであると私たちは考えています。
 
 ---
 
-## Contributing
+# 私たちが大切にすること
 
-This project welcomes contributors who believe AI should help people become more curious, thoughtful, and informed.
+私たちは常に、
 
-Whether you are a developer, designer, educator, or simply someone who loves learning,
+* 好奇心を育てること
+* 人を尊重すること
+* 正確な情報を届けること
+* 学びにつながること
+* 希望を届けること
 
-you're welcome here.
+を大切にします。
+
+そして、次のことは決して行いません。
+
+* 個人への攻撃
+* 誹謗中傷
+* 陰謀論の拡散
+* デマや誤情報の発信
+* 恐怖や怒りだけを利用したコンテンツ制作
+* クリック数だけを目的とした誇張表現
 
 ---
 
-## License
+# AI編集部
 
-MIT License
+Project Polaris は、一つのAIではありません。
+
+役割を持った複数のAIが、一つの編集部として協力します。
+
+| AI      | 役割              |
+| ------- | --------------- |
+| Polaris | 編集長（テーマ選定・意思決定） |
+| Orion   | リサーチャー（情報収集・調査） |
+| Athena  | ライター（台本・記事作成）   |
+| Sophia  | 校正・ファクトチェック     |
+| Atlas   | 動画制作・配信         |
+
+それぞれが専門性を持ち、信頼できるコンテンツを生み出します。
 
 ---
 
-> "The world becomes more beautiful every time someone discovers something new."
+# Roadmap
+
+## Phase 1
+
+編集理念の策定
+
+## Phase 2
+
+Polaris（編集長AI）の開発
+
+## Phase 3
+
+Orion（リサーチAI）の開発
+
+## Phase 4
+
+Athena（ライターAI）の開発
+
+## Phase 5
+
+Sophia（ファクトチェックAI）の開発
+
+## Phase 6
+
+Atlas（動画制作AI）の開発
+
+## Phase 7
+
+YouTubeへの自動投稿
+
+## Phase 8
+
+ブログ・Podcast・SNSなど複数メディアへの展開
+
+---
+
+# コントリビュート
+
+このプロジェクトでは、AIを使って「人の知的好奇心を育てるメディア」を一緒に作る仲間を歓迎します。
+
+エンジニア、デザイナー、クリエイター、教育関係者、そして学ぶことが好きな方。
+
+どなたでも参加できます。
+
+---
+
+# ライセンス
+
+本プロジェクトは MIT License のもとで公開予定です。
+
+---
+
+> **世界は、思っているよりずっと面白い。**
+>
+> その発見を、一人でも多くの人へ届けること。
+>
+> それが Project Polaris の使命です。
