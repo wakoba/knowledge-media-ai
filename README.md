@@ -3,7 +3,7 @@ An AI-powered editorial team that inspires curiosity and lifelong learning.
 
 # 🌍 Project Polaris
 
-> Knowledge should inspire curiosity, not division.
+> Every day, discover something worth sharing.
 
 An open-source AI editorial team dedicated to helping people discover how fascinating the world really is.
 
