@@ -1,11 +1,13 @@
 from agents.athena import Athena
 from agents.atlas import Atlas
+from agents.narrator import Narrator
 from agents.orion import Orion
 from agents.polaris import Polaris
 from agents.sophia import Sophia
 from storage.final_script_repository import FinalScriptRepository
 from storage.history_reader import HistoryReader
 from storage.meeting_repository import MeetingRepository
+from storage.narration_repository import NarrationRepository
 from storage.research_repository import ResearchRepository
 from storage.review_repository import ReviewRepository
 from storage.revised_review_repository import RevisedReviewRepository
@@ -30,7 +32,8 @@ class EditorialPipeline:
     6. Sophiaが修正版を再レビュー
     7. 最終台本をfinal_scriptとして保存
     8. Sophia承認済みならAtlasが動画設計を作成
-    9. すべての成果物をrun単位で保存
+    9. Narratorが読み上げ用ナレーション原稿を作成
+    10. すべての成果物をrun単位で保存
     """
 
     def __init__(
@@ -119,7 +122,9 @@ class EditorialPipeline:
                 final_review_result=final_review_result,
             )
 
+            video_plan_result = None
             video_plan_paths = None
+            narration_paths = None
 
             if final_review_result.approved:
                 video_plan_result, video_plan_paths = self._run_atlas(
@@ -131,13 +136,25 @@ class EditorialPipeline:
                     "Atlas video plan generated: %s",
                     video_plan_result.title,
                 )
+
+                narration_result, narration_paths = self._run_narrator(
+                    run_context=run_context,
+                    final_script_result=final_script_result,
+                    video_plan_result=video_plan_result,
+                )
+
+                self.logger.info(
+                    "Narration script generated: %s",
+                    narration_result.title,
+                )
+
             else:
                 self.logger.info(
-                    "Atlas skipped because the final script was not approved"
+                    "Atlas and Narrator skipped because the final script was not approved"
                 )
 
                 print()
-                print("Atlas skipped:")
+                print("Atlas and Narrator skipped:")
                 print("- Final script is not approved by Sophia.")
 
             run_summary_path = self._save_run_summary(
@@ -152,6 +169,7 @@ class EditorialPipeline:
                 review_paths=review_paths,
                 final_script_paths=final_script_paths,
                 video_plan_paths=video_plan_paths,
+                narration_paths=narration_paths,
                 revision_output_paths=revision_output_paths,
             )
 
@@ -564,6 +582,55 @@ class EditorialPipeline:
 
         return video_plan_result, video_plan_paths
 
+    def _run_narrator(
+        self,
+        run_context,
+        final_script_result,
+        video_plan_result,
+    ):
+        print()
+        print("=" * 60)
+        print("🎙️ Narrator Script")
+        print("=" * 60)
+
+        narrator = Narrator()
+        narration_result = narrator.create_narration_script(
+            final_script=final_script_result,
+            video_plan=video_plan_result,
+        )
+
+        print("Title:")
+        print(narration_result.title)
+        print()
+
+        print("Narration Style:")
+        print(narration_result.narration_style)
+        print()
+
+        print("Segments:")
+        for segment in narration_result.segments:
+            print(f"- Scene {segment.scene_number}: {segment.section_heading}")
+
+        narration_repository = NarrationRepository(
+            run_dir=run_context.run_dir,
+        )
+
+        narration_paths = narration_repository.save(narration_result)
+
+        self.logger.info("Narrator script completed")
+        self.logger.info("Saved Narration JSON: %s", narration_paths["json"])
+        self.logger.info(
+            "Saved Narration Markdown: %s",
+            narration_paths["markdown"],
+        )
+
+        print()
+        print("Narration script saved:")
+        print(f"- JSON: {narration_paths['json']}")
+        print(f"- Markdown: {narration_paths['markdown']}")
+
+        return narration_result, narration_paths
+
     def _save_run_summary(
         self,
         run_context,
@@ -577,6 +644,7 @@ class EditorialPipeline:
         review_paths,
         final_script_paths,
         video_plan_paths,
+        narration_paths,
         revision_output_paths,
     ):
         run_summary_repository = RunSummaryRepository(
@@ -593,6 +661,9 @@ class EditorialPipeline:
 
         if video_plan_paths is not None:
             output_paths["video_plan"] = video_plan_paths
+
+        if narration_paths is not None:
+            output_paths["narration_script"] = narration_paths
 
         output_paths.update(revision_output_paths)
 

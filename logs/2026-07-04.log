@@ -599,3 +599,218 @@ openai.RateLimitError: Error code: 429 - {'error': {'message': 'You exceeded you
 [2026-07-04 22:35:40] INFO Atlas video plan generated: 見えない手でつかむ：音で物体が浮く理由と空中触覚のリアル
 [2026-07-04 22:35:40] INFO Saved Run Summary: output/2026-07-04/run_222702/run_summary.md
 [2026-07-04 22:35:40] INFO Project Polaris completed successfully
+[2026-07-04 22:48:16] INFO Project Polaris started
+[2026-07-04 22:48:16] INFO Run ID: run_224816
+[2026-07-04 22:48:16] INFO Run directory: output/2026-07-04/run_224816
+[2026-07-04 22:48:16] INFO History summary generated
+[2026-07-04 22:53:36] INFO Generated 5 topics
+[2026-07-04 22:53:36] INFO Editor's Choice: 紙一枚が機械になる 折り紙・切り紙工学でつくる展開構造とソフトロボット
+[2026-07-04 22:53:36] INFO Saved JSON: output/2026-07-04/run_224816/meeting.json
+[2026-07-04 22:53:36] INFO Saved Markdown: output/2026-07-04/run_224816/meeting.md
+[2026-07-04 22:56:27] INFO Orion research completed
+[2026-07-04 22:56:27] INFO Saved Research JSON: output/2026-07-04/run_224816/research.json
+[2026-07-04 22:56:27] INFO Saved Research Markdown: output/2026-07-04/run_224816/research.md
+[2026-07-04 22:57:23] INFO Athena script completed
+[2026-07-04 22:57:23] INFO Script title: 紙一枚が機械になる：折り紙・切り紙がひらく展開構造とソフトロボット
+[2026-07-04 22:57:23] INFO Saved Script JSON: output/2026-07-04/run_224816/script.json
+[2026-07-04 22:57:23] INFO Saved Script Markdown: output/2026-07-04/run_224816/script.md
+[2026-07-04 22:57:54] INFO Sophia review completed
+[2026-07-04 22:57:54] INFO Sophia approved: True
+[2026-07-04 22:57:54] INFO Sophia risk level: low
+[2026-07-04 22:57:54] INFO Saved Review JSON: output/2026-07-04/run_224816/review.json
+[2026-07-04 22:57:54] INFO Saved Review Markdown: output/2026-07-04/run_224816/review.md
+[2026-07-04 22:57:54] INFO Athena revision skipped because Sophia approved the script
+[2026-07-04 22:57:54] INFO Saved Final Script JSON: output/2026-07-04/run_224816/final_script.json
+[2026-07-04 22:57:54] INFO Saved Final Script Markdown: output/2026-07-04/run_224816/final_script.md
+[2026-07-04 22:59:41] INFO Atlas video plan completed
+[2026-07-04 22:59:41] INFO Saved Video Plan JSON: output/2026-07-04/run_224816/video_plan.json
+[2026-07-04 22:59:41] INFO Saved Video Plan Markdown: output/2026-07-04/run_224816/video_plan.md
+[2026-07-04 22:59:41] INFO Atlas video plan generated: 紙一枚が機械になる：折り紙・切り紙がひらく展開構造とソフトロボット
+[2026-07-04 23:02:34] ERROR Project Polaris failed: 19 validation errors for NarrationScriptResult
+pronunciation_notes.0
+  Input should be a valid string [type=string_type, input_value={'term': 'ミウラ折り...ing': 'みうらおり'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.1
+  Input should be a valid string [type=string_type, input_value={'term': 'ポアソン比...ing': 'ぽあそんひ'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.2
+  Input should be a valid string [type=string_type, input_value={'term': 'コンプライ...いあんとひんじ'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.3
+  Input should be a valid string [type=string_type, input_value={'term': 'テーパ', 'reading': 'てーぱ'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.4
+  Input should be a valid string [type=string_type, input_value={'term': '蛇腹（ベル...（べるろーず）'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.5
+  Input should be a valid string [type=string_type, input_value={'term': 'キレスリン...': 'きれすりんぐ'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.6
+  Input should be a valid string [type=string_type, input_value={'term': 'アクチュエ...'あくちゅえーた'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.7
+  Input should be a valid string [type=string_type, input_value={'term': 'ハイドロゲ...': 'はいどろげる'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.8
+  Input should be a valid string [type=string_type, input_value={'term': '剛体折り', ...': 'ごうたいおり'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.9
+  Input should be a valid string [type=string_type, input_value={'term': '有限要素', ...'ゆうげんようそ'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.10
+  Input should be a valid string [type=string_type, input_value={'term': '運動学', 're...': 'うんどうがく'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.11
+  Input should be a valid string [type=string_type, input_value={'term': '最適化', 're...ing': 'さいてきか'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.12
+  Input should be a valid string [type=string_type, input_value={'term': 'ステントグ...てんとぐらふと'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.13
+  Input should be a valid string [type=string_type, input_value={'term': 'カテーテル...ing': 'かてーてる'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.14
+  Input should be a valid string [type=string_type, input_value={'term': '冗長設計', ...ちょうせっけい'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.15
+  Input should be a valid string [type=string_type, input_value={'term': '自己交差', ...ing': 'じここうさ'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.16
+  Input should be a valid string [type=string_type, input_value={'term': '等高線', 're...': 'とうこうせん'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.17
+  Input should be a valid string [type=string_type, input_value={'term': '応力', 'reading': 'おうりょく'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.18
+  Input should be a valid string [type=string_type, input_value={'term': '曲率', 'reading': 'きょくりつ'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+Traceback (most recent call last):
+  File "/Users/wakuwakusan/Documents/knowledge-media-ai/src/pipeline/editorial_pipeline.py", line 140, in run
+    narration_result, narration_paths = self._run_narrator(
+                                        ~~~~~~~~~~~~~~~~~~^
+        run_context=run_context,
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+        final_script_result=final_script_result,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        video_plan_result=video_plan_result,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/wakuwakusan/Documents/knowledge-media-ai/src/pipeline/editorial_pipeline.py", line 597, in _run_narrator
+    narration_result = narrator.create_narration_script(
+        final_script=final_script_result,
+        video_plan=video_plan_result,
+    )
+  File "/Users/wakuwakusan/Documents/knowledge-media-ai/src/agents/narrator.py", line 62, in create_narration_script
+    return NarrationScriptResult.model_validate(result)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/pydantic/main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 19 validation errors for NarrationScriptResult
+pronunciation_notes.0
+  Input should be a valid string [type=string_type, input_value={'term': 'ミウラ折り...ing': 'みうらおり'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.1
+  Input should be a valid string [type=string_type, input_value={'term': 'ポアソン比...ing': 'ぽあそんひ'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.2
+  Input should be a valid string [type=string_type, input_value={'term': 'コンプライ...いあんとひんじ'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.3
+  Input should be a valid string [type=string_type, input_value={'term': 'テーパ', 'reading': 'てーぱ'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.4
+  Input should be a valid string [type=string_type, input_value={'term': '蛇腹（ベル...（べるろーず）'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.5
+  Input should be a valid string [type=string_type, input_value={'term': 'キレスリン...': 'きれすりんぐ'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.6
+  Input should be a valid string [type=string_type, input_value={'term': 'アクチュエ...'あくちゅえーた'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.7
+  Input should be a valid string [type=string_type, input_value={'term': 'ハイドロゲ...': 'はいどろげる'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.8
+  Input should be a valid string [type=string_type, input_value={'term': '剛体折り', ...': 'ごうたいおり'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.9
+  Input should be a valid string [type=string_type, input_value={'term': '有限要素', ...'ゆうげんようそ'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.10
+  Input should be a valid string [type=string_type, input_value={'term': '運動学', 're...': 'うんどうがく'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.11
+  Input should be a valid string [type=string_type, input_value={'term': '最適化', 're...ing': 'さいてきか'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.12
+  Input should be a valid string [type=string_type, input_value={'term': 'ステントグ...てんとぐらふと'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.13
+  Input should be a valid string [type=string_type, input_value={'term': 'カテーテル...ing': 'かてーてる'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.14
+  Input should be a valid string [type=string_type, input_value={'term': '冗長設計', ...ちょうせっけい'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.15
+  Input should be a valid string [type=string_type, input_value={'term': '自己交差', ...ing': 'じここうさ'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.16
+  Input should be a valid string [type=string_type, input_value={'term': '等高線', 're...': 'とうこうせん'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.17
+  Input should be a valid string [type=string_type, input_value={'term': '応力', 'reading': 'おうりょく'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+pronunciation_notes.18
+  Input should be a valid string [type=string_type, input_value={'term': '曲率', 'reading': 'きょくりつ'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/string_type
+[2026-07-04 23:16:27] INFO Project Polaris started
+[2026-07-04 23:16:27] INFO Run ID: run_231627
+[2026-07-04 23:16:27] INFO Run directory: output/2026-07-04/run_231627
+[2026-07-04 23:16:27] INFO History summary generated
+[2026-07-04 23:17:56] INFO Generated 5 topics
+[2026-07-04 23:17:56] INFO Editor's Choice: 空気から飲み水をつくる MOFと吸放湿材料の大気集水
+[2026-07-04 23:17:56] INFO Saved JSON: output/2026-07-04/run_231627/meeting.json
+[2026-07-04 23:17:56] INFO Saved Markdown: output/2026-07-04/run_231627/meeting.md
+[2026-07-04 23:20:19] INFO Orion research completed
+[2026-07-04 23:20:19] INFO Saved Research JSON: output/2026-07-04/run_231627/research.json
+[2026-07-04 23:20:19] INFO Saved Research Markdown: output/2026-07-04/run_231627/research.md
+[2026-07-04 23:21:31] INFO Athena script completed
+[2026-07-04 23:21:31] INFO Script title: 空気から飲み水をつくる？MOFと塩ゲルがひらく大気集水の最前線
+[2026-07-04 23:21:31] INFO Saved Script JSON: output/2026-07-04/run_231627/script.json
+[2026-07-04 23:21:31] INFO Saved Script Markdown: output/2026-07-04/run_231627/script.md
+[2026-07-04 23:22:28] INFO Sophia review completed
+[2026-07-04 23:22:28] INFO Sophia approved: False
+[2026-07-04 23:22:28] INFO Sophia risk level: low
+[2026-07-04 23:22:28] INFO Saved Review JSON: output/2026-07-04/run_231627/review.json
+[2026-07-04 23:22:28] INFO Saved Review Markdown: output/2026-07-04/run_231627/review.md
+[2026-07-04 23:23:15] INFO Athena revision v1 completed
+[2026-07-04 23:23:15] INFO Revised Script title: 空気から飲み水をつくる？MOFと塩ゲルがひらく大気集水の最前線
+[2026-07-04 23:23:15] INFO Saved Revised Script JSON: output/2026-07-04/run_231627/revised_script_v1.json
+[2026-07-04 23:23:15] INFO Saved Revised Script Markdown: output/2026-07-04/run_231627/revised_script_v1.md
+[2026-07-04 23:24:11] INFO Sophia re-review v1 completed
+[2026-07-04 23:24:11] INFO Sophia re-review approved: True
+[2026-07-04 23:24:11] INFO Sophia re-review risk level: low
+[2026-07-04 23:24:11] INFO Saved Revised Review JSON: output/2026-07-04/run_231627/revised_review_v1.json
+[2026-07-04 23:24:11] INFO Saved Revised Review Markdown: output/2026-07-04/run_231627/revised_review_v1.md
+[2026-07-04 23:24:11] INFO Athena revision loop stopped because Sophia approved the revised script
+[2026-07-04 23:24:11] INFO Saved Final Script JSON: output/2026-07-04/run_231627/final_script.json
+[2026-07-04 23:24:11] INFO Saved Final Script Markdown: output/2026-07-04/run_231627/final_script.md
+[2026-07-04 23:25:59] INFO Atlas video plan completed
+[2026-07-04 23:25:59] INFO Saved Video Plan JSON: output/2026-07-04/run_231627/video_plan.json
+[2026-07-04 23:25:59] INFO Saved Video Plan Markdown: output/2026-07-04/run_231627/video_plan.md
+[2026-07-04 23:25:59] INFO Atlas video plan generated: 空気から飲み水をつくる？MOFと塩ゲルがひらく大気集水の最前線
+[2026-07-04 23:27:27] INFO Narrator script completed
+[2026-07-04 23:27:27] INFO Saved Narration JSON: output/2026-07-04/run_231627/narration_script.json
+[2026-07-04 23:27:27] INFO Saved Narration Markdown: output/2026-07-04/run_231627/narration_script.md
+[2026-07-04 23:27:27] INFO Narration script generated: 空気から飲み水をつくる？MOFと塩ゲルがひらく大気集水の最前線
+[2026-07-04 23:27:27] INFO Saved Run Summary: output/2026-07-04/run_231627/run_summary.md
+[2026-07-04 23:27:27] INFO Project Polaris completed successfully
