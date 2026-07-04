@@ -1,13 +1,18 @@
 from agents.polaris import Polaris
-from storage.meeting_storage import MeetingStorage
+from storage.meeting_repository import MeetingRepository
+from storage.history_reader import HistoryReader
 
 
 def main():
+    repository = MeetingRepository()
+
+    history_reader = HistoryReader(repository)
+    history_summary = history_reader.build_summary(limit=5)
+
     polaris = Polaris()
-    result = polaris.generate_topics()
-    
-    storage = MeetingStorage()
-    saved_paths = storage.save(result)
+    result = polaris.generate_topics(history_summary=history_summary)
+
+    saved_paths = repository.save(result)
 
     print()
     print("Saved:")
