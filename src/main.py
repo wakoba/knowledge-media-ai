@@ -1,8 +1,11 @@
-from agents.polaris import Polaris
+from agents.athena import Athena
 from agents.orion import Orion
+from agents.polaris import Polaris
 from storage.history_reader import HistoryReader
-from storage.research_repository import ResearchRepository
 from storage.meeting_repository import MeetingRepository
+from storage.research_repository import ResearchRepository
+from storage.run_context import RunContext
+from storage.script_repository import ScriptRepository
 from utils.logger import setup_logger
 
 
@@ -12,15 +15,24 @@ def main():
     try:
         logger.info("Project Polaris started")
 
-        repository = MeetingRepository()
+        run_context = RunContext()
 
-        history_reader = HistoryReader(repository)
+        logger.info("Run ID: %s", run_context.run_id)
+        logger.info("Run directory: %s", run_context.run_dir)
+
+        meeting_repository = MeetingRepository(
+            run_dir=run_context.run_dir,
+        )
+
+        history_reader = HistoryReader(meeting_repository)
         history_summary = history_reader.build_summary(limit=5)
 
         logger.info("History summary generated")
 
         polaris = Polaris()
-        result = polaris.generate_topics(history_summary=history_summary)
+        result = polaris.generate_topics(
+            history_summary=history_summary,
+        )
 
         logger.info("Generated %s topics", len(result.topics))
 
@@ -29,10 +41,15 @@ def main():
 
         logger.info("Editor's Choice: %s", selected_topic.title)
 
-        saved_paths = repository.save(result)
+        saved_paths = meeting_repository.save(result)
 
         logger.info("Saved JSON: %s", saved_paths["json"])
         logger.info("Saved Markdown: %s", saved_paths["markdown"])
+
+        print()
+        print("Run:")
+        print(f"- ID: {run_context.run_id}")
+        print(f"- Directory: {run_context.run_dir}")
 
         print()
         print("Saved:")
@@ -73,8 +90,10 @@ def main():
         print("Key Facts:")
         for fact in research_result.key_facts:
             print(f"- {fact}")
-            
-        research_repository = ResearchRepository()
+
+        research_repository = ResearchRepository(
+            run_dir=run_context.run_dir,
+        )
         research_paths = research_repository.save(research_result)
 
         logger.info("Orion research completed")
@@ -85,6 +104,41 @@ def main():
         print("Research saved:")
         print(f"- JSON: {research_paths['json']}")
         print(f"- Markdown: {research_paths['markdown']}")
+
+        print()
+        print("=" * 60)
+        print("🦉 Athena Script")
+        print("=" * 60)
+
+        athena = Athena()
+        script_result = athena.write_script(research_result)
+
+        print("Title:")
+        print(script_result.title)
+        print()
+
+        print("Hook:")
+        print(script_result.hook)
+        print()
+
+        print("Sections:")
+        for section in script_result.sections:
+            print(f"- {section.heading}")
+
+        script_repository = ScriptRepository(
+            run_dir=run_context.run_dir,
+        )
+        script_paths = script_repository.save(script_result)
+
+        logger.info("Athena script completed")
+        logger.info("Script title: %s", script_result.title)
+        logger.info("Saved Script JSON: %s", script_paths["json"])
+        logger.info("Saved Script Markdown: %s", script_paths["markdown"])
+
+        print()
+        print("Script saved:")
+        print(f"- JSON: {script_paths['json']}")
+        print(f"- Markdown: {script_paths['markdown']}")
 
         logger.info("Project Polaris completed successfully")
 

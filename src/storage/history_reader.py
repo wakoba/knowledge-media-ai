@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from storage.meeting_repository import MeetingRepository
 
 
@@ -13,18 +15,20 @@ class HistoryReader:
     def get_recent_meetings(self, limit: int = 5):
         """
         直近の編集会議を取得する。
+        日付単位ではなく、run単位で取得する。
         """
 
-        dates = self.repository.list_dates()
-        recent_dates = dates[-limit:]
+        paths = self.repository.list_meeting_paths()
+        recent_paths = paths[-limit:]
 
         meetings = []
 
-        for meeting_date in recent_dates:
-            meeting = self.repository.load_by_date(meeting_date)
+        for path in recent_paths:
+            meeting = self.repository.load_by_path(path)
+
             meetings.append(
                 {
-                    "date": meeting_date,
+                    "label": self._build_label(path),
                     "meeting": meeting,
                 }
             )
@@ -48,14 +52,14 @@ class HistoryReader:
         ]
 
         for item in recent_meetings:
-            meeting_date = item["date"]
+            label = item["label"]
             meeting = item["meeting"]
             choice = meeting.editors_choice
             selected_topic = meeting.topics[choice.index]
 
             lines.extend(
                 [
-                    f"## {meeting_date}",
+                    f"## {label}",
                     f"- 採用テーマ: {selected_topic.title}",
                     f"- 選定理由: {choice.reason}",
                     "",
@@ -71,3 +75,29 @@ class HistoryReader:
             lines.append("")
 
         return "\n".join(lines)
+
+    def _build_label(self, path: Path) -> str:
+        """
+        履歴表示用のラベルを作る。
+
+        新形式:
+        2026-07-04 / run_180955
+
+        旧形式:
+        2026-07-04
+        """
+
+        try:
+            relative_path = path.relative_to(self.repository.base_dir)
+        except ValueError:
+            return str(path)
+
+        parts = relative_path.parts
+
+        if len(parts) >= 3:
+            return f"{parts[0]} / {parts[1]}"
+
+        if len(parts) >= 1:
+            return parts[0]
+
+        return str(path)

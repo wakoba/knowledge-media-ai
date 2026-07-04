@@ -9,13 +9,19 @@ class ResearchRepository:
     Orionのリサーチ結果を保存するRepository。
 
     保存先:
-    output/YYYY-MM-DD/research.json
-    output/YYYY-MM-DD/research.md
+    output/YYYY-MM-DD/run_HHMMSS/research.json
+    output/YYYY-MM-DD/run_HHMMSS/research.md
     """
 
-    def __init__(self, base_dir: str = "output"):
+    def __init__(
+        self,
+        base_dir: str = "output",
+        run_dir: Path | str | None = None,
+    ):
         self.base_dir = Path(base_dir)
         self.base_dir.mkdir(parents=True, exist_ok=True)
+
+        self.run_dir = Path(run_dir) if run_dir is not None else None
 
     def save(
         self,
@@ -26,10 +32,10 @@ class ResearchRepository:
         リサーチ結果をJSONとMarkdownで保存する。
         """
 
-        target_date = research_date or date.today()
-
-        output_dir = self.base_dir / target_date.isoformat()
+        output_dir = self._resolve_output_dir(research_date)
         output_dir.mkdir(parents=True, exist_ok=True)
+
+        target_date = research_date or date.today()
 
         json_path = self._save_json(research, output_dir)
         md_path = self._save_markdown(research, output_dir, target_date)
@@ -39,15 +45,22 @@ class ResearchRepository:
             "markdown": md_path,
         }
 
+    def _resolve_output_dir(
+        self,
+        research_date: date | None = None,
+    ) -> Path:
+        if self.run_dir is not None:
+            return self.run_dir
+
+        target_date = research_date or date.today()
+
+        return self.base_dir / target_date.isoformat()
+
     def _save_json(
         self,
         research: OrionResearchResult,
         output_dir: Path,
     ) -> Path:
-        """
-        リサーチ結果をJSONで保存する。
-        """
-
         json_path = output_dir / "research.json"
 
         json_path.write_text(
@@ -63,10 +76,6 @@ class ResearchRepository:
         output_dir: Path,
         research_date: date,
     ) -> Path:
-        """
-        リサーチ結果をMarkdownで保存する。
-        """
-
         md_path = output_dir / "research.md"
 
         lines = [
@@ -74,7 +83,7 @@ class ResearchRepository:
             "",
             f"Date: {research_date.isoformat()}",
             "",
-            f"## Topic",
+            "## Topic",
             "",
             research.topic_title,
             "",
