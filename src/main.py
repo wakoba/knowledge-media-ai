@@ -1,5 +1,7 @@
 from agents.polaris import Polaris
+from agents.orion import Orion
 from storage.history_reader import HistoryReader
+from storage.research_repository import ResearchRepository
 from storage.meeting_repository import MeetingRepository
 from utils.logger import setup_logger
 
@@ -31,7 +33,6 @@ def main():
 
         logger.info("Saved JSON: %s", saved_paths["json"])
         logger.info("Saved Markdown: %s", saved_paths["markdown"])
-        logger.info("Project Polaris completed successfully")
 
         print()
         print("Saved:")
@@ -53,6 +54,39 @@ def main():
         print()
         print("Reason:")
         print(choice.reason)
+
+        print()
+        print("=" * 60)
+        print("🔭 Orion Research")
+        print("=" * 60)
+
+        orion = Orion()
+        research_result = orion.research(
+            topic_title=selected_topic.title,
+            topic_summary=selected_topic.summary,
+        )
+
+        print("Overview:")
+        print(research_result.overview)
+        print()
+
+        print("Key Facts:")
+        for fact in research_result.key_facts:
+            print(f"- {fact}")
+            
+        research_repository = ResearchRepository()
+        research_paths = research_repository.save(research_result)
+
+        logger.info("Orion research completed")
+        logger.info("Saved Research JSON: %s", research_paths["json"])
+        logger.info("Saved Research Markdown: %s", research_paths["markdown"])
+
+        print()
+        print("Research saved:")
+        print(f"- JSON: {research_paths['json']}")
+        print(f"- Markdown: {research_paths['markdown']}")
+
+        logger.info("Project Polaris completed successfully")
 
     except Exception as e:
         logger.exception("Project Polaris failed: %s", e)
